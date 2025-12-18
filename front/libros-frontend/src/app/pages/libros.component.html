@@ -1,0 +1,162 @@
+<div class="container mt-4">
+
+  <!-- ================= ALERTAS ================= -->
+  <div *ngIf="mensajeSuccess" class="alert alert-success">
+    {{ mensajeSuccess }}
+  </div>
+
+  <div *ngIf="mensajeError" class="alert alert-danger">
+    {{ mensajeError }}
+  </div>
+
+  <!-- ================= FORMULARIO ================= -->
+  <h4 class="mb-3">
+    {{ libroEditando ? 'Editar libro' : 'Registrar libro' }}
+  </h4>
+
+  <form [formGroup]="form" (ngSubmit)="guardar()" class="row g-3 mb-4">
+
+    <div class="col-md-6">
+      <label class="form-label">Nombre</label>
+      <input class="form-control" formControlName="nombre">
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Autor</label>
+      <input class="form-control" formControlName="autor">
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label">Fecha de publicación</label>
+      <input type="date" class="form-control" formControlName="fechaPublicacion">
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label">Número de ejemplares</label>
+      <input type="number" class="form-control" formControlName="numeroEjemplares">
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label">Costo</label>
+      <input type="number" step="0.01" class="form-control" formControlName="costo">
+    </div>
+
+    <div class="col-12">
+      <label class="form-label">Descripción</label>
+      <textarea class="form-control" rows="2" formControlName="descripcion"></textarea>
+    </div>
+
+    <div class="col-12">
+      <button class="btn btn-primary">
+        {{ libroEditando ? 'Actualizar' : 'Guardar' }}
+      </button>
+
+      <button
+        *ngIf="libroEditando"
+        type="button"
+        class="btn btn-secondary ms-2"
+        (click)="cancelarEdicion()">
+        Cancelar
+      </button>
+    </div>
+
+  </form>
+
+  <!-- ================= BUSCADOR ================= -->
+  <div class="card mb-3">
+    <div class="card-body">
+      <div class="row g-2 align-items-end">
+
+        <div class="col-md-3">
+          <label class="form-label">Campo</label>
+          <select class="form-select"
+                  [(ngModel)]="campo">
+            <option value="nombre">Nombre</option>
+            <option value="autor">Autor</option>
+            <option value="descripcion">Descripción</option>
+            <option value="costo">Costo</option>
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label class="form-label">Operador</label>
+          <select class="form-select"
+                  [(ngModel)]="operador">
+            <option value="contiene">Contiene</option>
+            <option value="noContiene">No contiene</option>
+            <option value="igual">Igual</option>
+            <option value="noIgual">No igual</option>
+            <option value="comienza">Comienza con</option>
+            <option value="termina">Termina en</option>
+          </select>
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label">Valor</label>
+          <input
+            class="form-control"
+            [(ngModel)]="valor"
+            placeholder="Ingrese valor a buscar"
+            (keyup.enter)="cargarLibros()">
+        </div>
+
+        <div class="col-md-2">
+          <button
+            class="btn btn-primary w-100"
+            (click)="cargarLibros()">
+            🔍 Buscar
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TABLA ================= -->
+  <table class="table table-bordered table-striped table-sm">
+
+    <thead class="table-dark">
+      <tr>
+        <th (click)="cambiarOrden('nombre')" style="cursor:pointer">Nombre</th>
+        <th (click)="cambiarOrden('autor')" style="cursor:pointer">Autor</th>
+        <th>Descripción</th>
+        <th (click)="cambiarOrden('fechaPublicacion')" style="cursor:pointer">
+          Fecha
+        </th>
+        <th (click)="cambiarOrden('numeroEjemplares')" style="cursor:pointer">
+          Ejemplares
+        </th>
+        <th (click)="cambiarOrden('costo')" style="cursor:pointer">
+          Costo
+        </th>
+        <th style="width:160px;">Acciones</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let libro of libros">
+        <td>{{ libro.nombre }}</td>
+        <td>{{ libro.autor }}</td>
+        <td>{{ libro.descripcion }}</td>
+        <td>{{ libro.fechaPublicacion | date:'yyyy-MM-dd' }}</td>
+        <td class="text-center">{{ libro.numeroEjemplares }}</td>
+        <td>{{ libro.costo | number:'1.2-2' }}</td>
+        <td>
+          <button
+            class="btn btn-warning btn-sm me-2"
+            (click)="editar(libro)">
+            Editar
+          </button>
+
+          <button
+            class="btn btn-danger btn-sm"
+            (click)="eliminar(libro.id!)">
+            Eliminar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+
+  </table>
+
+</div>
