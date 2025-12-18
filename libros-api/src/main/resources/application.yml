@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: libros-api
+
+  datasource:
+    url: jdbc:sqlserver://DESKTOP-9KA6B0U:1433;databaseName=libros_db;encrypt=false
+    username: sa
+    password: Sa123456!
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+server:
+  port: 8081
